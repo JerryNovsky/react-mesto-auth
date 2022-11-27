@@ -35,27 +35,33 @@ function App() {
 
   const history = useHistory();
 
-  useEffect(() => {
-    reactApi
-      .getUserData()
-      .then((data) => {
-        setCurrentUser(data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
-    reactApi
-      .getAllCards()
-      .then((data) => {
-        setCards(data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
+    if (token) {
+      reactApi
+        .getUserData(token)
+        .then((data) => {
+          setCurrentUser(data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [loggedIn]);
+
+  useEffect(() => {
+    if (token) {
+      reactApi
+        .getAllCards(token)
+        .then((data) => {
+          setCards(data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [loggedIn]);
 
   useEffect(() => {
     checkToken();
@@ -165,7 +171,6 @@ function App() {
   }
 
   function checkToken() {
-    const token = localStorage.getItem("token");
     if (token) {
       Auth.validateToken(token)
         .then((data) => {
