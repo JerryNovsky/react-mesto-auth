@@ -2,7 +2,7 @@ import React from "react";
 import doneIcon from "../images/Union.png";
 import errorIcon from "../images/Error.png";
 
-function InfoTooltip({ isOpen, onClose, isDone }) {
+function InfoTooltip({ isOpen, onClose, isDone, doneText, errorText }) {
   const [isRegisterDone, setIsRegisterDone] = React.useState(false);
 
   React.useEffect(() => {
@@ -16,24 +16,16 @@ function InfoTooltip({ isOpen, onClose, isDone }) {
           <img
             className="popup__image popup__image_type_login"
             src={isRegisterDone ? doneIcon : errorIcon}
-            alt={
-              isRegisterDone
-                ? "Вы успешно зарегистрировались!"
-                : "Что-то пошло не так"
-            }
+            alt={isRegisterDone ? doneText : errorText}
           />
           <h2 className="popup__title_type_infotooltip">
-            {isDone
-              ? "Вы успешно зарегистрировались!"
-              : "Что-то пошло не так! Попробуйте ещё раз."}
+            {isDone ? doneText : errorText}
           </h2>
         </div>
         <button
           type="button"
           className={`popup__close-button popup__add-close-button button`}
-          onClick={() => {
-            onClose();
-          }}
+          onClick={onClose}
         ></button>
       </div>
     </div>

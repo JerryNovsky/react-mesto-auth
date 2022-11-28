@@ -19,6 +19,7 @@ import Login from "./Login";
 import Register from "./Register";
 import ProtectedRoute from "./ProtectedRoute";
 import * as Auth from "../utils/Auth";
+import InfoTooltip from "./InfoTooltip";
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] =
@@ -33,12 +34,17 @@ function App() {
   const [email, setEmail] = React.useState("");
   const [loggedIn, setLoggedIn] = React.useState(false);
 
+  const [isDone, setIsDone] = React.useState(false);
+  const [isInfoTooltipOpen, setIsInfoTooltipOpen] = React.useState(false);
+
+  const [password, setPassword] = React.useState("");
+
   const history = useHistory();
 
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    if (token) {
+    if (loggedIn) {
       reactApi
         .getUserData(token)
         .then((data) => {
@@ -51,7 +57,7 @@ function App() {
   }, [loggedIn]);
 
   useEffect(() => {
-    if (token) {
+    if (loggedIn) {
       reactApi
         .getAllCards(token)
         .then((data) => {
@@ -83,6 +89,7 @@ function App() {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
+    setIsInfoTooltipOpen(false);
     setSelectedCard({});
   }
 
@@ -167,6 +174,7 @@ function App() {
       })
       .catch((error) => {
         console.log(error);
+        setIsInfoTooltipOpen(true);
       });
   }
 
@@ -190,6 +198,26 @@ function App() {
     history.push("/sign-in");
   }
 
+  function handleRegister() {
+    if (password) {
+      Auth.register(password, email)
+        .then((res) => {
+          if (res) {
+            setIsDone(true);
+            setIsInfoTooltipOpen(true);
+            setEmail("");
+            setPassword("");
+            history.push("/sign-in");
+          }
+        })
+        .catch((error) => {
+          setIsDone(false);
+          setIsInfoTooltipOpen(true);
+          console.log(error);
+        });
+    }
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <CardContext.Provider value={cards}>
@@ -211,7 +239,13 @@ function App() {
             />
 
             <Route path={`/sign-up`}>
-              <Register />
+              <Register
+                onRegister={handleRegister}
+                onSetEmail={setEmail}
+                onSetPassword={setPassword}
+                email={email}
+                password={password}
+              />
             </Route>
 
             <Route path={`/sign-in`}>
@@ -220,6 +254,14 @@ function App() {
           </Switch>
 
           <Footer />
+
+          <InfoTooltip
+            onClose={closeAllPopups}
+            isDone={isDone}
+            isOpen={isInfoTooltipOpen}
+            doneText={"Вы успешно зарегистрировались!"}
+            errorText={"Что-то пошло не так! Попробуйте ещё раз."}
+          />
 
           <PopupWithEditProfile
             isOpen={isEditProfilePopupOpen}

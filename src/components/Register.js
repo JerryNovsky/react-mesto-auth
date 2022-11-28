@@ -1,53 +1,25 @@
 import React from "react";
 import { AuthForm } from "./AuthForm";
-import { Link, useHistory } from "react-router-dom";
-import * as auth from "../utils/Auth";
-import InfoTooltip from "./InfoTooltip";
+import { Link } from "react-router-dom";
 
-export function Register() {
-  const history = useHistory();
-
-  const [password, setPassword] = React.useState("");
-  const [email, setEmail] = React.useState("");
-
-  const [isDone, setIsDone] = React.useState(false);
-  const [isInfoTooltipOpen, setIsInfoTooltipOpen] = React.useState(false);
-
-  const onClose = () => {
-    setIsInfoTooltipOpen(false);
-    if (isDone) {
-      history.push("/sign-in");
-    }
-  };
-
+export function Register({
+  onRegister,
+  onSetEmail,
+  onSetPassword,
+  email,
+  password,
+}) {
   function handleChangeEmail(e) {
-    setEmail(e.target.value);
+    onSetEmail(e.target.value);
   }
 
   function handleChangePassword(e) {
-    setPassword(e.target.value);
+    onSetPassword(e.target.value);
   }
 
   function handleSubmit(e) {
     e.preventDefault();
-    if (password) {
-      auth
-        .register(password, email)
-        .then((res) => {
-          if (res) {
-            setIsDone(true);
-            setIsInfoTooltipOpen(true);
-            setEmail("");
-            setPassword("");
-          } else {
-            setIsDone(false);
-            setIsInfoTooltipOpen(true);
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
+    onRegister();
   }
 
   return (
@@ -65,11 +37,6 @@ export function Register() {
       <Link to="/sign-in" className="authorization__login-link">
         Уже зарегистрированы? Войти
       </Link>
-      <InfoTooltip
-        isOpen={isInfoTooltipOpen}
-        onClose={onClose}
-        isDone={isDone}
-      />
     </div>
   );
 }

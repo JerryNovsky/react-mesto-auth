@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, Route } from "react-router-dom";
+import { Link, Route, Switch } from "react-router-dom";
 
 function Header({ loggedIn, email, onLogout }) {
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
@@ -24,17 +24,19 @@ function Header({ loggedIn, email, onLogout }) {
         </div>
       )}
 
-      <Route path="/sign-in">
-        <Link to="/sign-up" className="header__text">
-          Регистрация
-        </Link>
-      </Route>
+      <Switch>
+        <Route path="/sign-in">
+          <Link to="/sign-up" className="header__text">
+            Регистрация
+          </Link>
+        </Route>
 
-      <Route path="/sign-up">
-        <Link to="/sign-in" className="header__text">
-          Войти
-        </Link>
-      </Route>
+        <Route path="/sign-up">
+          <Link to="/sign-in" className="header__text">
+            Войти
+          </Link>
+        </Route>
+      </Switch>
     </header>
   );
 }

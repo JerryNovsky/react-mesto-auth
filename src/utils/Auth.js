@@ -2,6 +2,13 @@ import React from "react";
 
 export const baseURL = "https://auth.nomoreparties.co";
 
+function getResponseData(res) {
+  if (!res.ok) {
+    return Promise.reject(`Ошибка: ${res.status}`);
+  }
+  return res.json();
+}
+
 export const register = (password, email) => {
   return fetch(`${baseURL}/signup`, {
     method: "POST",
@@ -9,15 +16,7 @@ export const register = (password, email) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ password, email }),
-  })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  }).then((res) => getResponseData(res));
 };
 
 export const authorize = (password, email) => {
@@ -27,9 +26,7 @@ export const authorize = (password, email) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ password, email }),
-  }).then((res) => {
-    return res.json();
-  });
+  }).then((res) => getResponseData(res));
 };
 
 export const validateToken = (token) => {
@@ -39,15 +36,5 @@ export const validateToken = (token) => {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-  })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      } else {
-        return Promise.reject(`Ошибка: ${res.status}`);
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  }).then((res) => getResponseData(res));
 };
