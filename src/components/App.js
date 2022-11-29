@@ -5,7 +5,7 @@ import Footer from "./Footer";
 import PopupWithForm from "./PopupWithForm";
 import ImagePopup from "./ImagePopup";
 import PopupWithEditProfile from "./PopupWithEditProfile";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { reactApi } from "../utils/Api";
 import {
   CurrentUserContext,
@@ -22,22 +22,20 @@ import * as Auth from "../utils/Auth";
 import InfoTooltip from "./InfoTooltip";
 
 function App() {
-  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] =
-    React.useState(false);
-  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
-  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] =
-    React.useState(false);
+  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
+  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
+  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
 
-  const [selectedCard, setSelectedCard] = React.useState({});
-  const [currentUser, setCurrentUser] = React.useState(startUserData);
-  const [cards, setCards] = React.useState([]);
-  const [email, setEmail] = React.useState("");
-  const [loggedIn, setLoggedIn] = React.useState(false);
+  const [selectedCard, setSelectedCard] = useState({});
+  const [currentUser, setCurrentUser] = useState(startUserData);
+  const [cards, setCards] = useState([]);
+  const [email, setEmail] = useState("");
+  const [loggedIn, setLoggedIn] = useState(false);
 
-  const [isDone, setIsDone] = React.useState(false);
-  const [isInfoTooltipOpen, setIsInfoTooltipOpen] = React.useState(false);
+  const [isDone, setIsDone] = useState(false);
+  const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
 
-  const [password, setPassword] = React.useState("");
+  const [password, setPassword] = useState("");
 
   const history = useHistory();
 
@@ -174,6 +172,7 @@ function App() {
       })
       .catch((error) => {
         console.log(error);
+        isDone(false);
         setIsInfoTooltipOpen(true);
       });
   }
